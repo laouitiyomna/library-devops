@@ -10,3 +10,4 @@ dist/
 .angular/
 .idea/
 .vscode/
+!.env.staging.example

@@ -1,0 +1,25 @@
+name: library-staging
+
+services:
+  db:
+    image: postgres:17-alpine
+    env_file: [.env.staging]
+    volumes:
+      - pgdata-staging:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U library -d library"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    image: ghcr.io/laouitiyomna/library-backend:${IMAGE_TAG}
+    ports: ["8080:8080"]
+    env_file: [.env.staging]
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata-staging:
